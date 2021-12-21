@@ -23,8 +23,6 @@ $ ./task report               # Statistics
 
 Use the ls command to see all the items that are not yet complete, in ascending order of priority.
 
-Every item should be printed on a new line. with the following format
-
 ```
 [index] [task] [priority]
 ```
@@ -57,7 +55,7 @@ $ ./task del 3
 Deleted item with index 3
 ```
 
-Attempting to delete a non-existent item should display an error message.
+Attempting to delete a non-existent item displays an error message.
 
 ```
 $ ./task del 5
@@ -73,7 +71,7 @@ $ ./task done 1
 Marked item as done.
 ```
 
-Attempting to mark a non-existed item as completed will display an error message.
+Attempting to mark a non-existed item as completed displays an error message.
 
 ```
 $ ./task done 5
