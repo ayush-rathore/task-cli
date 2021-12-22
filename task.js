@@ -181,12 +181,15 @@ if (cmd == "report") {
 			console.log(`Pending : ${data.toString().split("\n").length}`);
 			console.log(`${data.toString()}\n`);
 			fs.readFile("completed.txt", (err, data) => {
-				console.log(
-					`Completed : ${data.toString().split("\n").length}`
-				);
-				let lines = data.toString().split("\n");
-				for (let i = 0; i < lines.length; i++) {
-					console.log(lines[i]);
+				if (err) console.log("There are no completed tasks!");
+				else {
+					console.log(
+						`Completed : ${data.toString().split("\n").length}`
+					);
+					let lines = data.toString().split("\n");
+					for (let i = 0; i < lines.length; i++) {
+						console.log(lines[i]);
+					}
 				}
 			});
 		}
