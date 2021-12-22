@@ -72,7 +72,7 @@ if (cmd == "del") {
 			if (err) console.log(`There are no pending tasks!`);
 			else {
 				let lines = data.toString().split("\n");
-				if (index >= lines.length || index < 1) {
+				if (index > lines.length || index < 1) {
 					console.log(
 						`Error: task with index #${index} does not exist. Nothing deleted.`
 					);
@@ -176,7 +176,8 @@ if (cmd == "done") {
 // Generating report
 if (cmd == "report") {
 	fs.readFile("task.txt", (err, data) => {
-		if (err) console.log("There are no pending tasks!");
+		if (err || data.toString() == "")
+			console.log("There are no pending tasks!");
 		else {
 			console.log(`Pending : ${data.toString().split("\n").length}`);
 			console.log(`${data.toString()}\n`);
