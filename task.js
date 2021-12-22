@@ -22,10 +22,10 @@ for (let i = 2; i < argsLength; i++) {
 // Usage or Help command
 if (cmd == "help" || argsLength < 3) {
 	console.log(`Usage :-
-$ ./task add 2 hello world    # Add a new item with priority 2 and text "hello world" to the list
-$ ./task ls                   # Show incomplete priority list items sorted by priority in ascending order
-$ ./task del INDEX            # Delete the incomplete item with the given index
-$ ./task done INDEX           # Mark the incomplete item with the given index as complete
+$ ./task add 2 "hello world"  # Add a new task with priority 2 and text "hello world" to the list
+$ ./task ls                   # Show incomplete priority list tasks sorted by priority in ascending order
+$ ./task del INDEX            # Delete the incomplete task with the given index
+$ ./task done INDEX           # Mark the incomplete task with the given index as complete
 $ ./task help                 # Show usage
 $ ./task report               # Statistics`);
 }
@@ -110,7 +110,7 @@ if (cmd == "done") {
 				let lines = data.toString().split("\n");
 				if (index > lines.length || index < 1) {
 					console.log(
-						`Error: no incomplete item with index #${index} exists.`
+						`Error: no incomplete task with index #${index} exists.`
 					);
 				} else {
 					let taskLines = [];
@@ -146,7 +146,7 @@ if (cmd == "done") {
 					}
 					fs.writeFile("task.txt", taskLines.join("\n"), (err) => {
 						if (err) throw err;
-						console.log("Marked item as done.");
+						console.log("Marked task as done.");
 					});
 					fs.readFile("completed.txt", (err, data) => {
 						if (err) {
