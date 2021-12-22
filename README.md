@@ -80,7 +80,7 @@ Error: no incomplete item with index 5 exists.
 
 ### 6. Generate a report
 
-Show the number of complete and incomplete items in the list. and the complete and incomplete items grouped together.
+Shows the number of complete and incomplete items in the list.
 
 ```
 $ ./task report
