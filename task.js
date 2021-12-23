@@ -47,12 +47,13 @@ if (cmd == "add") {
 	}
 	fs.readFile("task.txt", (err, data) => {
 		if (err) {
-			var add = 1;
+			var add = 0;
 		} else {
 			let lines = data.toString().split("\n");
-			var add = lines.length;
+			if (lines.length == 0) var add = 0;
+			else var add = lines.length;
 		}
-		let addStatement = `${add}. ${cmdStatement} [${priority}]\n`;
+		let addStatement = `${add + 1}. ${cmdStatement} [${priority}]\n`;
 		fs.appendFile("task.txt", addStatement, (err) => {
 			if (err) throw err;
 			console.log(
