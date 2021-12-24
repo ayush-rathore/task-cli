@@ -101,7 +101,7 @@ if (cmd == "del") {
 					lines.splice(index - 1, 1);
 					fs.writeFile("task.txt", lines.join("\n"), (err) => {
 						if (err) throw err;
-						console.log(`Deleted task with index #${index}`);
+						console.log(`Deleted task with index #${index}`.green);
 					});
 				}
 			}
