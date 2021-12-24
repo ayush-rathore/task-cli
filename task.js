@@ -4,6 +4,8 @@
 const fs = require("fs"); // Import the fileSystem module
 const process = require("process"); // Import the process module
 
+var colors = require("colors"); // Import the colors module
+
 let args = process.argv; // Get the arguments from the command line
 
 const argsLength = args.length; // Get the length of the arguments
@@ -25,7 +27,7 @@ $ ./task report               # Statistics`);
 if (cmd == "ls") {
 	fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log(`There are no pending tasks!`);
+			console.log(`There are no pending tasks!`.blue);
 		else {
 			let lines = data.toString().split("\n");
 			lines.sort();
@@ -45,13 +47,13 @@ if (cmd == "add") {
 	let priority = args[3];
 	let cmdStatement = args[4];
 	if (priority == undefined || cmdStatement == undefined) {
-		console.log("Error: Missing tasks string. Nothing added!");
+		console.log("Error: Missing tasks string. Nothing added!".red);
 	} else {
 		let addStatement = "\n" + `${priority} ${cmdStatement}`;
 		fs.appendFile("task.txt", addStatement, (err) => {
 			if (err) throw err;
 			console.log(
-				`Added task: "${cmdStatement}" with priority ${priority}`
+				`Added task: "${cmdStatement}" with priority ${priority}`.green
 			);
 		});
 	}
@@ -61,23 +63,30 @@ if (cmd == "add") {
 if (cmd == "del") {
 	let index = args[3];
 	if (index == undefined) {
-		console.log("Error: Missing NUMBER for deleting tasks.");
+		console.log("Error: Missing NUMBER for deleting tasks.".red);
 	} else {
 		fs.readFile("task.txt", (err, data) => {
-			if (err) throw err;
-			let lines = data.toString().split("\n");
-			lines.sort();
-			if (lines[0] == "") lines.shift();
-			if (index > lines.length || index < 1) {
+			if (err)
 				console.log(
 					`Error: item with index #${index} does not exist. Nothing deleted.`
+						.red
 				);
-			} else {
-				lines.splice(index - 1, 1);
-				fs.writeFile("task.txt", lines.join("\n"), (err) => {
-					if (err) throw err;
-					console.log(`Deleted task with index #${index}`);
-				});
+			else {
+				let lines = data.toString().split("\n");
+				lines.sort();
+				if (lines[0] == "") lines.shift();
+				if (index > lines.length || index < 1) {
+					console.log(
+						`Error: item with index #${index} does not exist. Nothing deleted.`
+							.red
+					);
+				} else {
+					lines.splice(index - 1, 1);
+					fs.writeFile("task.txt", lines.join("\n"), (err) => {
+						if (err) throw err;
+						console.log(`Deleted task with index #${index}`);
+					});
+				}
 			}
 		});
 	}
@@ -87,28 +96,36 @@ if (cmd == "del") {
 if (cmd == "done") {
 	let index = args[3];
 	if (index == undefined) {
-		console.log("Error: Missing NUMBER for marking tasks as done.");
+		console.log("Error: Missing NUMBER for marking tasks as done.".red);
 	} else {
 		fs.readFile("task.txt", (err, data) => {
-			if (err) throw err;
-			let lines = data.toString().split("\n");
-			lines.sort();
-			if (lines[0] == "") lines.shift();
-			if (index > lines.length || index < 1) {
+			if (err)
 				console.log(
-					`Error: no incomplete item with index #${index} exists.`
+					`Error: no incomplete item with index #${index} exists.`.red
 				);
-			} else {
-				let complete = lines[index - 1].slice(1).trim();
-				lines.splice(index - 1, 1);
-				let incomplete = lines.join("\n");
-				fs.writeFile("task.txt", incomplete, (err) => {
-					if (err) throw err;
-				});
-				fs.appendFile("completed.txt", "\n" + complete, (err) => {
-					if (err) throw err;
-					console.log(`Marked task with index #${index} as done`);
-				});
+			else {
+				let lines = data.toString().split("\n");
+				lines.sort();
+				if (lines[0] == "") lines.shift();
+				if (index > lines.length || index < 1) {
+					console.log(
+						`Error: no incomplete item with index #${index} exists.`
+							.red
+					);
+				} else {
+					let complete = lines[index - 1].slice(1).trim();
+					lines.splice(index - 1, 1);
+					let incomplete = lines.join("\n");
+					fs.writeFile("task.txt", incomplete, (err) => {
+						if (err) throw err;
+					});
+					fs.appendFile("completed.txt", "\n" + complete, (err) => {
+						if (err) throw err;
+						console.log(
+							`Marked task with index #${index} as done`.green
+						);
+					});
+				}
 			}
 		});
 	}
@@ -118,26 +135,27 @@ if (cmd == "done") {
 if (cmd == "report") {
 	fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log("There are no pending tasks!\n");
+			console.log("There are no pending tasks!".blue);
 		else {
 			let lines = data.toString().split("\n");
+			lines.sort();
 			if (lines[0] == "") lines.shift();
-			console.log(`Pending : ${lines.length}`);
+			console.log(`Pending : ${lines.length}`.yellow);
 			for (let i = 0; i < lines.length; i++) {
 				let line = lines[i].split(" ");
 				let priority = line.slice(0, 1).join();
 				let task = line.slice(1).join(" ");
-				console.log(`${i + 1}. ${task} [${priority}]\n`);
+				console.log(`${i + 1}. ${task} [${priority}]`);
 			}
 		}
 	});
 	fs.readFile("completed.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log("There no completed tasks!");
+			console.log("There no completed tasks!".blue);
 		else {
 			let lines = data.toString().split("\n");
 			if (lines[0] == "") lines.shift();
-			console.log(`Completed : ${lines.length}`);
+			console.log(`Completed : ${lines.length}`.green);
 			for (let i = 0; i < lines.length; i++) {
 				console.log(`${i + 1}. ${lines[i]}`);
 			}
