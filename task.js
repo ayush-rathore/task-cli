@@ -8,16 +8,7 @@ let args = process.argv; // Get the arguments from the command line
 
 const argsLength = args.length; // Get the length of the arguments
 
-let cmd = "",
-	cmdStatement = "";
-// Initialize the variables
-
-for (let i = 2; i < argsLength; i++) {
-	if (i == 2) cmd = args[i];
-	// Get the command from the arguments
-	else cmdStatement = args[i];
-	// Get the command statement from the arguments
-}
+let cmd = args[2]; // Get the command
 
 // Usage or Help command
 if (cmd == "help" || argsLength < 3) {
@@ -52,7 +43,7 @@ if (cmd == "ls") {
 // Adding tasks to task.txt
 if (cmd == "add") {
 	let priority = args[3];
-	cmdStatement = args[4];
+	let cmdStatement = args[4];
 	if (priority == undefined || cmdStatement == undefined) {
 		console.log("Error: Missing tasks string. Nothing added!");
 	} else {
