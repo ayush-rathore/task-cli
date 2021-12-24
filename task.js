@@ -1,5 +1,5 @@
 // Author - Ayush Rathore
-// Version - 1.5
+// Version - 2.0
 
 const fs = require("fs"); // Import the fileSystem module
 const process = require("process"); // Import the process module
