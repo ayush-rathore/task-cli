@@ -89,6 +89,28 @@ if (cmd == "done") {
 	if (index == undefined) {
 		console.log("Error: Missing NUMBER for marking tasks as done.");
 	} else {
+		fs.readFile("task.txt", (err, data) => {
+			if (err) throw err;
+			let lines = data.toString().split("\n");
+			lines.sort();
+			if (lines[0] == "") lines.shift();
+			if (index > lines.length || index < 1) {
+				console.log(
+					`Error: no incomplete item with index #${index} exists.`
+				);
+			} else {
+				let complete = lines[index - 1].slice(1).trim();
+				lines.splice(index - 1, 1);
+				let incomplete = lines.join("\n");
+				fs.writeFile("task.txt", incomplete, (err) => {
+					if (err) throw err;
+				});
+				fs.appendFile("completed.txt", "\n" + complete, (err) => {
+					if (err) throw err;
+					console.log(`Marked task with index #${index} as done`);
+				});
+			}
+		});
 	}
 }
 
@@ -96,22 +118,29 @@ if (cmd == "done") {
 if (cmd == "report") {
 	fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log("There are no pending tasks!");
+			console.log("There are no pending tasks!\n");
 		else {
-			console.log(`Pending : ${data.toString().split("\n").length}`);
-			console.log(`${data.toString()}\n`);
-			fs.readFile("completed.txt", (err, data) => {
-				if (err) console.log("There are no completed tasks!");
-				else {
-					console.log(
-						`Completed : ${data.toString().split("\n").length}`
-					);
-					let lines = data.toString().split("\n");
-					for (let i = 0; i < lines.length; i++) {
-						console.log(lines[i]);
-					}
-				}
-			});
+			let lines = data.toString().split("\n");
+			if (lines[0] == "") lines.shift();
+			console.log(`Pending : ${lines.length}`);
+			for (let i = 0; i < lines.length; i++) {
+				let line = lines[i].split(" ");
+				let priority = line.slice(0, 1).join();
+				let task = line.slice(1).join(" ");
+				console.log(`${i + 1}. ${task} [${priority}]\n`);
+			}
+		}
+	});
+	fs.readFile("completed.txt", (err, data) => {
+		if (err || data.toString() == "")
+			console.log("There no completed tasks!");
+		else {
+			let lines = data.toString().split("\n");
+			if (lines[0] == "") lines.shift();
+			console.log(`Completed : ${lines.length}`);
+			for (let i = 0; i < lines.length; i++) {
+				console.log(`${i + 1}. ${lines[i]}`);
+			}
 		}
 	});
 }
