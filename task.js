@@ -33,8 +33,19 @@ $ ./task report               # Statistics`);
 // Listing all the tasks
 if (cmd == "ls") {
 	fs.readFile("task.txt", (err, data) => {
-		if (err) console.log(`There are no pending tasks!`);
-		else console.log(data.toString());
+		if (err || data.toString() == "")
+			console.log(`There are no pending tasks!`);
+		else {
+			let lines = data.toString().split("\n");
+			lines.sort();
+			lines.splice(0, 1);
+			for (let i = 0; i < lines.length; i++) {
+				let line = lines[i].split(" ");
+				let priority = line.slice(0, 1).join();
+				let task = line.slice(1).join(" ");
+				console.log(`${i + 1}. ${task} [${priority}]`);
+			}
+		}
 	});
 }
 
@@ -44,23 +55,15 @@ if (cmd == "add") {
 	cmdStatement = args[4];
 	if (priority == undefined || cmdStatement == undefined) {
 		console.log("Error: Missing tasks string. Nothing added!");
-	}
-	fs.readFile("task.txt", (err, data) => {
-		if (err) {
-			var add = 0;
-		} else {
-			let lines = data.toString().split("\n");
-			if (lines.length == 0) var add = 0;
-			else var add = lines.length;
-		}
-		let addStatement = `${add + 1}. ${cmdStatement} [${priority}]\n`;
+	} else {
+		let addStatement = `${priority} ${cmdStatement}` + "\n";
 		fs.appendFile("task.txt", addStatement, (err) => {
 			if (err) throw err;
 			console.log(
 				`Added task: "${cmdStatement}" with priority ${priority}`
 			);
 		});
-	});
+	}
 }
 
 // Deleting tasks from task.txt
