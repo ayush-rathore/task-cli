@@ -67,8 +67,7 @@ if (cmd == "add") {
 		console.log("Error: Missing tasks string. Nothing added!".red);
 	} else {
 		let addStatement = "\n" + `${priority} ${cmdStatement}`;
-		fs.appendFile("task.txt", addStatement, (err) => {
-			if (err) throw err;
+		fs.appendFile("task.txt", addStatement, () => {
 			console.log(
 				`Added task: "${cmdStatement}" with priority ${priority}`.green
 			);
@@ -99,8 +98,7 @@ if (cmd == "del") {
 					);
 				} else {
 					lines.splice(index - 1, 1);
-					fs.writeFile("task.txt", lines.join("\n"), (err) => {
-						if (err) throw err;
+					fs.writeFile("task.txt", lines.join("\n"), () => {
 						console.log(`Deleted task with index #${index}`.green);
 					});
 				}
@@ -136,8 +134,7 @@ if (cmd == "done") {
 					fs.writeFile("task.txt", incomplete, (err) => {
 						if (err) throw err;
 					});
-					fs.appendFile("completed.txt", "\n" + complete, (err) => {
-						if (err) throw err;
+					fs.appendFile("completed.txt", "\n" + complete, () => {
 						console.log(
 							`Marked task with index #${index} as done`.green
 						);
