@@ -15,18 +15,18 @@ let cmd = args[2]; // Get the command
 // Usage or Help command
 if (cmd == "help" || argsLength < 3) {
 	console.log(
-		`|----------------------------------------------------------------|`
+		`		|----------------------------------------------------------------|`
 			.green
 	);
 	console.log(
-		`|                    Welcome to Task CLI                      	 |`.green
+		`		|                    Welcome to Task CLI                      	 |`.green
 	);
 	console.log(
-		`|  A command-line (CLI) program that lets you manage your tasks. |`
+		`		|  A command-line (CLI) program that lets you manage your tasks. |`
 			.green
 	);
 	console.log(
-		`|----------------------------------------------------------------|`
+		`		|----------------------------------------------------------------|`
 			.green
 	);
 	console.log(
