@@ -14,13 +14,30 @@ let cmd = args[2]; // Get the command
 
 // Usage or Help command
 if (cmd == "help" || argsLength < 3) {
-	console.log(`Usage :-
+	console.log(
+		`|----------------------------------------------------------------|`
+			.green
+	);
+	console.log(
+		`|                    Welcome to Task CLI                      	 |`.green
+	);
+	console.log(
+		`|  A command-line (CLI) program that lets you manage your tasks. |`
+			.green
+	);
+	console.log(
+		`|----------------------------------------------------------------|`
+			.green
+	);
+	console.log(
+		`Usage :-
 $ ./task add 2 "hello world"  # Add a new task with priority 2 and text "hello world" to the list
 $ ./task ls                   # Show incomplete priority list tasks sorted by priority in ascending order
 $ ./task del INDEX            # Delete the incomplete task with the given index
 $ ./task done INDEX           # Mark the incomplete task with the given index as complete
 $ ./task help                 # Show usage
-$ ./task report               # Statistics`);
+$ ./task report               # Statistics`.yellow
+	);
 }
 
 // Listing all the tasks
