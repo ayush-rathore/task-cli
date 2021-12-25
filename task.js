@@ -144,8 +144,8 @@ const done = () => {
 };
 
 // Generating report
-const report = () => {
-	fs.readFile("task.txt", (err, data) => {
+const report = async () => {
+	await fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
 			console.log(`There are no pending tasks!\n`.blue);
 		else {
