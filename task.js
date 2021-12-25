@@ -51,7 +51,7 @@ if (cmd == "ls") {
 			if (lines[0] == "") lines.shift();
 			for (let i = 0; i < lines.length; i++) {
 				let line = lines[i].split(" ");
-				let priority = line.slice(0, 1).join();
+				let priority = line[0];
 				let task = line.slice(1).join(" ");
 				console.log(`${i + 1}. ${task} [${priority}]`);
 			}
@@ -149,7 +149,7 @@ if (cmd == "done") {
 if (cmd == "report") {
 	fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log("There are no pending tasks!".blue);
+			console.log(`There are no pending tasks!\n`.blue);
 		else {
 			let lines = data.toString().split("\n");
 			lines.sort();
@@ -157,15 +157,16 @@ if (cmd == "report") {
 			console.log(`Pending : ${lines.length}`.yellow);
 			for (let i = 0; i < lines.length; i++) {
 				let line = lines[i].split(" ");
-				let priority = line.slice(0, 1).join();
+				let priority = line[0];
 				let task = line.slice(1).join(" ");
 				console.log(`${i + 1}. ${task} [${priority}]`);
 			}
+			console.log("");
 		}
 	});
 	fs.readFile("completed.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log("There no completed tasks!".blue);
+			console.log(`There are no completed tasks!\n`.blue);
 		else {
 			let lines = data.toString().split("\n");
 			if (lines[0] == "") lines.shift();
