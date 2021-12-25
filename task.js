@@ -4,16 +4,14 @@
 const fs = require("fs"); // Import the fileSystem module
 const process = require("process"); // Import the process module
 
-var colors = require("colors"); // Import the colors module
+const colors = require("colors"); // Import the colors module
 
 let args = process.argv; // Get the arguments from the command line
-
-const argsLength = args.length; // Get the length of the arguments
 
 let cmd = args[2]; // Get the command
 
 // Usage or Help command
-if (cmd == "help" || argsLength < 3) {
+const help = () => {
 	console.log(
 		`		|----------------------------------------------------------------|`
 			.green
@@ -38,10 +36,10 @@ $ ./task done INDEX           # Mark the incomplete task with the given index as
 $ ./task help                 # Show usage
 $ ./task report               # Statistics`.yellow
 	);
-}
+};
 
 // Listing all the tasks
-if (cmd == "ls") {
+const ls = () => {
 	fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
 			console.log(`There are no pending tasks!`.blue);
@@ -57,10 +55,10 @@ if (cmd == "ls") {
 			}
 		}
 	});
-}
+};
 
 // Adding tasks to task.txt
-if (cmd == "add") {
+const add = () => {
 	let priority = args[3];
 	let cmdStatement = args[4];
 	if (priority == undefined || cmdStatement == undefined) {
@@ -73,10 +71,10 @@ if (cmd == "add") {
 			);
 		});
 	}
-}
+};
 
 // Deleting tasks from task.txt
-if (cmd == "del") {
+const del = () => {
 	let index = args[3];
 	if (index == undefined) {
 		console.log("Error: Missing NUMBER for deleting tasks.".red);
@@ -105,10 +103,10 @@ if (cmd == "del") {
 			}
 		});
 	}
-}
+};
 
 // Marking tasks as done
-if (cmd == "done") {
+const done = () => {
 	let index = args[3];
 	if (index == undefined) {
 		console.log("Error: Missing NUMBER for marking tasks as done.".red);
@@ -143,10 +141,10 @@ if (cmd == "done") {
 			}
 		});
 	}
-}
+};
 
 // Generating report
-if (cmd == "report") {
+const report = () => {
 	fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
 			console.log(`There are no pending tasks!\n`.blue);
@@ -176,4 +174,28 @@ if (cmd == "report") {
 			}
 		}
 	});
+};
+
+// Switch Case for all commands
+switch (cmd) {
+	case "help":
+		help();
+		break;
+	case "ls":
+		ls();
+		break;
+	case "add":
+		add();
+		break;
+	case "del":
+		del();
+		break;
+	case "done":
+		done();
+		break;
+	case "report":
+		report();
+		break;
+	default:
+		help();
 }
