@@ -124,8 +124,8 @@ const done = () => {
 	}
 };
 
-const readTasks = async () => {
-	await fs.readFile("task.txt", (err, data) => {
+const readTasks = () => {
+	fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
 			console.log(`There are no pending tasks!\n`.blue);
 		else {
@@ -141,10 +141,11 @@ const readTasks = async () => {
 			}
 		}
 	});
+	return Promise.resolve();
 };
 
-const readCompleted = async () => {
-	await fs.readFile("completed.txt", (err, data) => {
+const readCompleted = () => {
+	fs.readFile("completed.txt", (err, data) => {
 		if (err || data.toString() == "")
 			console.log(`There are no completed tasks!\n`.blue);
 		else {
@@ -165,8 +166,8 @@ const ls = () => {
 };
 
 // Generating report
-const report = () => {
-	readTasks();
+const report = async () => {
+	await readTasks();
 	readCompleted();
 };
 
