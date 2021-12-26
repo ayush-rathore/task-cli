@@ -144,7 +144,7 @@ const readTasks = async () => {
 };
 
 const readCompleted = async () => {
-	fs.readFile("completed.txt", (err, data) => {
+	await fs.readFile("completed.txt", (err, data) => {
 		if (err || data.toString() == "")
 			console.log(`There are no completed tasks!\n`.blue);
 		else {
