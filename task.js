@@ -38,25 +38,6 @@ $ ./task report               # Statistics`.yellow
 	);
 };
 
-// Listing all the tasks
-const ls = () => {
-	fs.readFile("task.txt", (err, data) => {
-		if (err || data.toString() == "")
-			console.log(`There are no pending tasks!`.blue);
-		else {
-			let lines = data.toString().split("\n");
-			lines.sort();
-			if (lines[0] == "") lines.shift();
-			for (let i = 0; i < lines.length; i++) {
-				let line = lines[i].split(" ");
-				let priority = line[0];
-				let task = line.slice(1).join(" ");
-				console.log(`${i + 1}. ${task} [${priority}]`);
-			}
-		}
-	});
-};
-
 // Adding tasks to task.txt
 const add = () => {
 	let priority = args[3];
@@ -143,8 +124,7 @@ const done = () => {
 	}
 };
 
-// Generating report
-const report = async () => {
+const readTasks = async () => {
 	await fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
 			console.log(`There are no pending tasks!\n`.blue);
@@ -159,21 +139,35 @@ const report = async () => {
 				let task = line.slice(1).join(" ");
 				console.log(`${i + 1}. ${task} [${priority}]`);
 			}
-			console.log("");
 		}
 	});
+};
+
+const readCompleted = async () => {
 	fs.readFile("completed.txt", (err, data) => {
 		if (err || data.toString() == "")
 			console.log(`There are no completed tasks!\n`.blue);
 		else {
 			let lines = data.toString().split("\n");
 			if (lines[0] == "") lines.shift();
+			console.log("");
 			console.log(`Completed : ${lines.length}`.green);
 			for (let i = 0; i < lines.length; i++) {
 				console.log(`${i + 1}. ${lines[i]}`);
 			}
 		}
 	});
+};
+
+// Listing all the tasks
+const ls = () => {
+	readTasks();
+};
+
+// Generating report
+const report = () => {
+	readTasks();
+	readCompleted();
 };
 
 // Switch Case for all commands
