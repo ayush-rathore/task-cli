@@ -9,6 +9,6 @@
   "author": "Ayush Rathore",
   "license": "ISC",
   "dependencies": {
-    "colors": "^1.4.1"
+    "cli-color": "^2.0.1"
   }
 }
