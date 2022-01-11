@@ -55,7 +55,9 @@ const add = () => {
 	if (priority == undefined || cmdStatement == undefined) {
 		console.log(red("Error: Missing tasks string. Nothing added!"));
 	} else {
-		let addStatement = "\n" + `${priority} ${cmdStatement}`;
+		let currentDate = new Date();
+		let dateString = currentDate.toISOString().substring(0, 10);
+		let addStatement = "\n" + `${priority} ${cmdStatement} ${dateString}`;
 		fs.appendFile("task.txt", addStatement, () => {
 			console.log(
 				green(`Added task: "${cmdStatement}" with priority ${priority}`)
@@ -122,17 +124,25 @@ const done = () => {
 						)
 					);
 				} else {
-					let complete = lines[index - 1].slice(1).trim();
+					let complete = lines[index - 1].slice(1).trim().split(" ");
+					let date = complete.pop();
+					let completeStatement = `${complete.join(" ")} ${date}`;
 					lines.splice(index - 1, 1);
 					let incomplete = lines.join("\n");
 					fs.writeFile("task.txt", incomplete, (err) => {
 						if (err) throw err;
 					});
-					fs.appendFile("completed.txt", "\n" + complete, () => {
-						console.log(
-							green(`Marked task with index #${index} as done`)
-						);
-					});
+					fs.appendFile(
+						"completed.txt",
+						"\n" + completeStatement,
+						() => {
+							console.log(
+								green(
+									`Marked task with index #${index} as done`
+								)
+							);
+						}
+					);
 				}
 			}
 		});
@@ -151,8 +161,13 @@ const readTasks = () => {
 			for (let i = 0; i < lines.length; i++) {
 				let line = lines[i].split(" ");
 				let priority = line[0];
+				let date = line.pop();
 				let task = line.slice(1).join(" ");
-				console.log(`${i + 1}. ${task} [${priority}]`);
+				console.log(
+					`${
+						i + 1
+					}. Task: ${task}\n   Date Added: ${date}\n   Priority: [${priority}]`
+				);
 			}
 		}
 	});
@@ -162,14 +177,19 @@ const readTasks = () => {
 const readCompleted = () => {
 	fs.readFile("completed.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log(blue(`There are no completed tasks!\n`));
+			console.log(blue(`There are no completed tasks!`));
 		else {
 			let lines = data.toString().split("\n");
 			if (lines[0] == "") lines.shift();
-			console.log("");
-			console.log(yellow(`Completed : ${lines.length}`));
+			console.log(green("\n" + `Completed : ${lines.length}`));
 			for (let i = 0; i < lines.length; i++) {
-				console.log(`${i + 1}. ${lines[i]}`);
+				let completed = lines[i].split(" ");
+				let date = completed.pop();
+				console.log(
+					`${i + 1}. Task: ${completed.join(
+						" "
+					)}\n   Date Completed: ${date}`
+				);
 			}
 		}
 	});
