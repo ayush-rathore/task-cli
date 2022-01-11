@@ -4,13 +4,8 @@
 const fs = require("fs"); // Import the fileSystem module
 const process = require("process"); // Import the process module
 
-const clc = require("cli-color"); // Cli-Color Module
-
-const green = clc.green;
-const red = clc.red;
-const yellow = clc.yellow;
-const blue = clc.blue;
-const magenta = clc.magentaBright;
+const strings = require("node-strings");
+const emoji = require("node-emoji");
 
 let args = process.argv; // Get the arguments from the command line
 
@@ -19,29 +14,37 @@ let cmd = args[2]; // Get the command
 // Usage or Help command
 const help = () => {
 	console.log(
-		green(
-			`		|----------------------------------------------------------------|`
+		strings.green(
+			strings.bold(
+				`		╔════════════════════════════════════════════════════════════════╗`
+			)
 		)
 	);
 	console.log(
-		green(
-			`		|                    Welcome to Task CLI                      	 |`
+		strings.green(
+			strings.bold(
+				`		║                    Welcome to Task CLI                      	 ║`
+			)
 		)
 	);
 	console.log(
-		green(
-			`		|  A command-line (CLI) program that lets you manage your tasks. |`
+		strings.green(
+			strings.bold(
+				`		║  A command-line (CLI) program that lets you manage your tasks  ║`
+			)
 		)
 	);
 	console.log(
-		green(
-			`		|----------------------------------------------------------------|`
+		strings.green(
+			strings.bold(
+				`		╚════════════════════════════════════════════════════════════════╝`
+			)
 		)
 	);
 	console.log(
-		yellow(`Usage :-
-$ ./task add 2 "hello world"  # Add a new task with priority 2 and text "hello world" to the list
-$ ./task ls                   # Show incomplete priority list tasks sorted by priority in ascending order
+		strings.blue(`Usage :-
+$ ./task add 1 "Hello World"  # Add a new task with priority 2 and text "Hello World" to the list
+$ ./task ls                   # Show incomplete tasks sorted by priority in ascending order
 $ ./task del INDEX            # Delete the incomplete task with the given index
 $ ./task done INDEX           # Mark the incomplete task with the given index as complete
 $ ./task help                 # Show usage
@@ -54,15 +57,21 @@ const add = () => {
 	let priority = args[3];
 	let cmdStatement = args[4];
 	if (priority == undefined || cmdStatement == undefined) {
-		console.log(red("Error: Missing tasks string. Nothing added!"));
+		console.log(
+			strings.red(
+				emoji.emojify(":x: Error: Missing tasks string. Nothing added!")
+			)
+		);
 	} else {
 		let currentDate = new Date();
 		let dateString = currentDate.toISOString().substring(0, 10);
 		let addStatement = "\n" + `${priority} ${cmdStatement} ${dateString}`;
 		fs.appendFile("task.txt", addStatement, () => {
 			console.log(
-				green(
-					`Added task: "${cmdStatement}" with priority [${priority}]`
+				strings.green(
+					emoji.emojify(
+						`:white_check_mark: Added task: "${cmdStatement}" with priority [${priority}]`
+					)
 				)
 			);
 		});
@@ -73,13 +82,19 @@ const add = () => {
 const del = () => {
 	let index = args[3];
 	if (index == undefined) {
-		console.log(red("Error: Missing NUMBER for deleting tasks."));
+		console.log(
+			strings.red(
+				emoji.emojify(":x: Error: Missing NUMBER for deleting tasks.")
+			)
+		);
 	} else {
 		fs.readFile("task.txt", (err, data) => {
 			if (err)
 				console.log(
-					red(
-						`Error: item with index #${index} does not exist. Nothing deleted.`
+					strings.red(
+						emoji.emojify(
+							`:x: Error: item with index #${index} does not exist. Nothing deleted.`
+						)
 					)
 				);
 			else {
@@ -88,14 +103,22 @@ const del = () => {
 				if (lines[0] == "") lines.shift();
 				if (index > lines.length || index < 1) {
 					console.log(
-						red(
-							`Error: item with index #${index} does not exist. Nothing deleted.`
+						strings.red(
+							emoji.emojify(
+								`:x: Error: item with index #${index} does not exist. Nothing deleted.`
+							)
 						)
 					);
 				} else {
 					lines.splice(index - 1, 1);
 					fs.writeFile("task.txt", lines.join("\n"), () => {
-						console.log(green(`Deleted task with index #${index}`));
+						console.log(
+							strings.green(
+								emoji.emojify(
+									`:white_check_mark: Deleted task with index #${index}`
+								)
+							)
+						);
 					});
 				}
 			}
@@ -107,13 +130,21 @@ const del = () => {
 const done = () => {
 	let index = args[3];
 	if (index == undefined) {
-		console.log(red("Error: Missing NUMBER for marking tasks as done."));
+		console.log(
+			strings.red(
+				emoji.emojify(
+					":x: Error: Missing NUMBER for marking tasks as done."
+				)
+			)
+		);
 	} else {
 		fs.readFile("task.txt", (err, data) => {
 			if (err)
 				console.log(
-					red(
-						`Error: no incomplete item with index #${index} exists.`
+					strings.red(
+						emoji.emojify(
+							`:x: Error: no incomplete item with index #${index} exists.`
+						)
 					)
 				);
 			else {
@@ -122,8 +153,10 @@ const done = () => {
 				if (lines[0] == "") lines.shift();
 				if (index > lines.length || index < 1) {
 					console.log(
-						red(
-							`Error: no incomplete item with index #${index} exists.`
+						strings.red(
+							emoji.emojify(
+								`:x: Error: no incomplete item with index #${index} exists.`
+							)
 						)
 					);
 				} else {
@@ -140,8 +173,10 @@ const done = () => {
 						"\n" + completeStatement,
 						() => {
 							console.log(
-								green(
-									`Marked task with index #${index} as done`
+								strings.green(
+									emoji.emojify(
+										`:white_check_mark: Marked task with index #${index} as done`
+									)
 								)
 							);
 						}
@@ -155,25 +190,33 @@ const done = () => {
 const readTasks = () => {
 	fs.readFile("task.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log(blue(`There are no pending tasks!\n`));
+			console.log(
+				strings.blue(
+					emoji.emojify(
+						`:open_file_folder: There are no pending tasks!\n`
+					)
+				)
+			);
 		else {
 			let lines = data.toString().split("\n");
 			lines.sort(function (a, b) {
 				return a - b;
 			});
 			if (lines[0] == "") lines.shift();
-			console.log(yellow(`Pending : ${lines.length}`));
+			console.log(
+				strings.yellow(
+					emoji.emojify(`:pencil: Pending : ${lines.length}`)
+				)
+			);
 			for (let i = 0; i < lines.length; i++) {
 				let line = lines[i].split(" ");
 				let priority = line[0];
 				let date = line.pop();
 				let task = line.slice(1).join(" ");
 				console.log(
-					magenta(
-						`${
-							i + 1
-						}. Task: ${task}\n   Date Added: ${date}\n   Priority: [${priority}]\n`
-					)
+					`${
+						i + 1
+					}. Task: ${task}\n   Date Added: ${date}\n   Priority: [${priority}]\n`
 				);
 			}
 		}
@@ -184,20 +227,30 @@ const readTasks = () => {
 const readCompleted = () => {
 	fs.readFile("completed.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log(blue(`There are no completed tasks!\n`));
+			console.log(
+				strings.blue(
+					emoji.emojify(
+						`:open_file_folder: There are no completed tasks!\n`
+					)
+				)
+			);
 		else {
 			let lines = data.toString().split("\n");
 			if (lines[0] == "") lines.shift();
-			console.log(green("\n" + `Completed : ${lines.length}`));
+			console.log(
+				strings.green(
+					emoji.emojify(
+						`:card_file_box:  Completed : ${lines.length}`
+					)
+				)
+			);
 			for (let i = 0; i < lines.length; i++) {
 				let completed = lines[i].split(" ");
 				let date = completed.pop();
 				console.log(
-					magenta(
-						`${i + 1}. Task: ${completed.join(
-							" "
-						)}\n   Date Completed: ${date}\n`
-					)
+					`${i + 1}. Task: ${completed.join(
+						" "
+					)}\n   Date Completed: ${date}\n`
 				);
 			}
 		}
