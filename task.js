@@ -10,6 +10,7 @@ const green = clc.green;
 const red = clc.red;
 const yellow = clc.yellow;
 const blue = clc.blue;
+const magenta = clc.magentaBright;
 
 let args = process.argv; // Get the arguments from the command line
 
@@ -60,7 +61,9 @@ const add = () => {
 		let addStatement = "\n" + `${priority} ${cmdStatement} ${dateString}`;
 		fs.appendFile("task.txt", addStatement, () => {
 			console.log(
-				green(`Added task: "${cmdStatement}" with priority ${priority}`)
+				green(
+					`Added task: "${cmdStatement}" with priority [${priority}]`
+				)
 			);
 		});
 	}
@@ -155,7 +158,9 @@ const readTasks = () => {
 			console.log(blue(`There are no pending tasks!\n`));
 		else {
 			let lines = data.toString().split("\n");
-			lines.sort();
+			lines.sort(function (a, b) {
+				return a - b;
+			});
 			if (lines[0] == "") lines.shift();
 			console.log(yellow(`Pending : ${lines.length}`));
 			for (let i = 0; i < lines.length; i++) {
@@ -164,9 +169,11 @@ const readTasks = () => {
 				let date = line.pop();
 				let task = line.slice(1).join(" ");
 				console.log(
-					`${
-						i + 1
-					}. Task: ${task}\n   Date Added: ${date}\n   Priority: [${priority}]`
+					magenta(
+						`${
+							i + 1
+						}. Task: ${task}\n   Date Added: ${date}\n   Priority: [${priority}]\n`
+					)
 				);
 			}
 		}
@@ -177,7 +184,7 @@ const readTasks = () => {
 const readCompleted = () => {
 	fs.readFile("completed.txt", (err, data) => {
 		if (err || data.toString() == "")
-			console.log(blue(`There are no completed tasks!`));
+			console.log(blue(`There are no completed tasks!\n`));
 		else {
 			let lines = data.toString().split("\n");
 			if (lines[0] == "") lines.shift();
@@ -186,9 +193,11 @@ const readCompleted = () => {
 				let completed = lines[i].split(" ");
 				let date = completed.pop();
 				console.log(
-					`${i + 1}. Task: ${completed.join(
-						" "
-					)}\n   Date Completed: ${date}`
+					magenta(
+						`${i + 1}. Task: ${completed.join(
+							" "
+						)}\n   Date Completed: ${date}\n`
+					)
 				);
 			}
 		}
